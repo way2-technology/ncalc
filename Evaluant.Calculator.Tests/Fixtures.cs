@@ -612,6 +612,7 @@ namespace NCalc.Tests
         {
             var e = new Expression("([a] != 0) && ([b]/[a]>2)");
             e.Parameters["a"] = 0;
+            e.Parameters["b"] = 0;
 
             Assert.AreEqual(false, e.Evaluate());
         }

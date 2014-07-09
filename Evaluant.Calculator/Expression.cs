@@ -206,6 +206,7 @@ namespace NCalc
             var visitor = new EvaluationVisitor(Options);
             visitor.EvaluateFunction += EvaluateFunction;
             visitor.EvaluateParameter += EvaluateParameter;
+            visitor.EvaluateBinaryExpression += EvaluateBinaryExpression;
             visitor.Parameters = Parameters;
 
             // if array evaluation, execute the same expression multiple times
@@ -274,6 +275,7 @@ namespace NCalc
 
         public event EvaluateFunctionHandler EvaluateFunction;
         public event EvaluateParameterHandler EvaluateParameter;
+        public event EvaluateBinaryExpressionHandler EvaluateBinaryExpression;
 
         private Dictionary<string, object> _parameters;
 
