@@ -82,6 +82,13 @@ namespace NCalc.Domain
             return typeCode == TypeCode.Decimal || typeCode == TypeCode.Double || typeCode == TypeCode.Single;
         }
 
+        public event EvaluateBinaryExpressionHandler EvaluateBinaryExpression;
+
+        private void OnEvaluateBinaryExpression(BinaryExpressionType type, BinaryExpressionArgs args) {
+            if (EvaluateBinaryExpression != null)
+                EvaluateBinaryExpression(type, args);
+        }
+
         public override void Visit(BinaryExpression expression)
         {
             // simulate Lazy<Func<>> behavior for late evaluation
@@ -107,6 +114,18 @@ namespace NCalc.Domain
                 }
                 return rightValue;
             };
+
+            // Calls external implementation
+            BinaryExpressionArgs args = new BinaryExpressionArgs();
+            args.LeftValue = left();
+            args.RightValue = right();
+            OnEvaluateBinaryExpression(expression.Type, args);
+
+            // If an external implementation was found get the result back
+            if (args.ResultSetted) {
+                Result = args.Result;
+                return;
+            }
 
             switch (expression.Type)
             {
